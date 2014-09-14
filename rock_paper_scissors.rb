@@ -33,10 +33,10 @@ class Player
     # or shoud we do it in Game and pass the input here?
     begin 
       input = gets.chomp.downcase
-      break if Game.get_tools.keys.include?(input)
+      break if Game::TOOLS.keys.include?(input)
       puts "That's not valid choice"
     end while true
-    self.tool = Game.get_tools[input]
+    self.tool = Game::TOOLS[input]
   end
 end # Player
 
@@ -44,24 +44,20 @@ end # Player
 class AIPlayer < Player
   # override select_tool to choose a random tool
   def select_tool
-    self.tool = Game.get_tools.values.sample
+    self.tool = Game::TOOLS.values.sample
   end
 end #AIPlayer
 
 class Game
-  @@tools = {}
-  @@tools["r"] = Tool.new("rock", "scissors", "crushes")
-  @@tools["p"] = Tool.new("paper", "rock", "wraps")
-  @@tools["s"] = Tool.new("scissors", "paper", "cuts")  
+  TOOLS = {"r" => Tool.new("rock", "scissors", "crushes"),
+           "p" => Tool.new("paper", "rock", "wraps"),
+           "s" => Tool.new("scissors", "paper", "cuts")
+          }
   attr_accessor :player, :computer, :tools
   
   def initialize
-    @player = Player.new() # use default name until we change get user input
+    @player = Player.new() # use default name until we get user input
     @computer = AIPlayer.new("Computer")
-  end
-   
-  def self.get_tools
-    @@tools
   end
   
   def run
@@ -76,7 +72,7 @@ class Game
       sleep 1
       check_winner
       sleep 1
-      puts "\nPlay again?"
+      puts "\nPlay again? [Y]es or [N]o"
       break if gets.chomp.downcase != "y"
     end
   end
