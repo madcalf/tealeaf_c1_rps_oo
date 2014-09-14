@@ -56,7 +56,8 @@ class Game
   attr_accessor :player, :computer, :tools
   
   def initialize
-    # nothing to do here, really...
+    @player = Player.new() # use default name until we change get user input
+    @computer = AIPlayer.new("Computer")
   end
    
   def self.get_tools
@@ -64,8 +65,8 @@ class Game
   end
   
   def run
-    self.player = Player.new(get_player_name)
-    self.computer = AIPlayer.new("Computer")
+    show_title
+    self.player.name = get_player_name
     
     loop do
       show_title
@@ -81,7 +82,7 @@ class Game
   end
   
   def get_player_name
-    system('clear')
+    # system('clear')
     puts "What's your name?"
     gets.chomp.capitalize
   end
@@ -108,15 +109,12 @@ class Game
   def check_winner
     puts "\n"
     if (player.tool == computer.tool)
-      # tie
       puts "It's a tie"
     elsif (player.tool > computer.tool)
-      # player wins
       puts "#{player.tool.name.capitalize} #{player.tool.action} #{player.tool.target.capitalize}"
       puts "\n#{player.name} wins!!"
       player.score += 1
     else
-      # computer wins
       puts "#{computer.tool.name.capitalize} #{computer.tool.action} #{computer.tool.target.capitalize}"
       puts "\nComputer wins!!"
       computer.score += 1
